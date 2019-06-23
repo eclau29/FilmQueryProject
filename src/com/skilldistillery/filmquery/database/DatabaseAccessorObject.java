@@ -165,12 +165,13 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 				film.setRating(filmByKeywordResult.getString("rating"));
 				film.setSpecialFeatures(filmByKeywordResult.getString("special_features"));
 				film.setCast(findActorsByFilmId(film.getId()));
-				
+				film.setLanguage(getLanguageByFilmID(film.getId()));
+
 				films.add(film);
 				
 			}
 		} catch (SQLException e1) {
-			e1.printStackTrace();
+//			e1.printStackTrace();
 		} finally {
 			if (conn != null) {
 				conn.close();

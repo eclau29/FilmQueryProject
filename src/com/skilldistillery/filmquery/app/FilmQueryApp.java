@@ -15,13 +15,20 @@ public class FilmQueryApp {
 
 	public static void main(String[] args) throws SQLException {
 		FilmQueryApp app = new FilmQueryApp();
+		System.out.println("Welcome to FilmQuery(TM)!");
 //    try {
 //		app.test();
 //	} catch (SQLException e) {
 //		// TODO Auto-generated catch block
 //		e.printStackTrace();
 //	} // run this first to make sure you can connect to DB
-		app.launch();
+		try {
+			app.launch();
+		} catch (Exception e) {
+			System.out.println("Invalid entry, please try again.\n");
+			app.launch();
+//			e.printStackTrace();
+		}
 	}
 
 	private void test() throws SQLException {
@@ -36,7 +43,6 @@ public class FilmQueryApp {
 	private void launch() throws SQLException {
 		Scanner input = new Scanner(System.in);
 
-		System.out.println("Welcome to FilmQuery(TM)!");
 		startUserInterface(input);
 
 		input.close();
@@ -52,17 +58,22 @@ public class FilmQueryApp {
 		Film film;
 		switch (resp) {
 		case 1:
-			System.out.print("Please enter a FILM ID: ");
-			int filmIdInput = input.nextInt();
-			film = db.findFilmById(filmIdInput);
-
-			if (film != null) {
-				System.out.println(film + "\n");
-			} else {
-				System.out.println("I'm sorry, invalid FILM ID number. Please try again");
-
+			System.out.print("Please enter a film ID: ");
+			int filmIdInput;
+			try {
+				filmIdInput = input.nextInt();
+				film = db.findFilmById(filmIdInput);
+				if (film != null) {
+					System.out.println(film + "\n");
+				} 
+			} catch (Exception e) {
+//				e.printStackTrace();
+				input.nextLine();
+				System.out.println("\nI'm sorry, invalid film ID number. Please try again.\n");
+			} finally {
+				startUserInterface(input);
 			}
-			startUserInterface(input);
+			break;
 
 		case 2:
 			System.out.print("Please enter a KEYWORD: ");
@@ -74,13 +85,20 @@ public class FilmQueryApp {
 					System.out.println(film2);
 				}
 			} else {
-				System.out.println("I'm sorry, there are no results.");
+				System.out.println("I'm sorry, there are no results.\n");
+
 			}
 			startUserInterface(input);
+			break;
 		case 3:
-			System.out.println("Thank you for using FilmQuery(TM)" + "\n" + "Exiting...");
+			System.out.println("Exiting...\nThank you for using FilmQuery(TM)");
 			contLoop = false;
+			break;
+		default:
+			System.out.println("Invalid entry. Please try again\n");
+			startUserInterface(input);
 		}
+	
 	}
 
 }
