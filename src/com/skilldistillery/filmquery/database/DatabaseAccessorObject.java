@@ -16,41 +16,34 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 //DAO accesses database, in actor example, use the findactorbyid method as example
 	// this contains connectors, etc.
 
-	private static final String URL = "jdbc:mysql://localhost:3306/sdvid?useSSL=false";
+	private static final String URL = "jdbc:mysql://localhost:3306/sdvid?useSSL=false"; //location of database
 	private static String user = "student";
 	private static String pwd = "student";
 	private static Connection conn;
-//	static {
-//		try {
-//			conn = DriverManager.getConnection(URL, user, pwd);
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//	}
+
 	static {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	@Override
 	public Film findFilmById(int filmId) {
 		Film film = null;
 		try {
-			conn = DriverManager.getConnection(URL, user, pwd);
+			conn = DriverManager.getConnection(URL, user, pwd); //this connects you to the database
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
-		String sql = "SELECT id, title, description, release_year, language_id, rental_duration, rental_rate, length, replacement_cost, rating, special_features FROM film WHERE id = ?";
-		PreparedStatement pstmt;
+		String sql = "SELECT id, title, description, release_year, language_id, rental_duration, rental_rate, length, replacement_cost, rating, special_features FROM film WHERE id = ?"; //test sql queries in terminal first
+		PreparedStatement pstmt; 
 		try {
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, filmId);
-			ResultSet filmResult = pstmt.executeQuery();
-			if (filmResult.next()) {
+			pstmt = conn.prepareStatement(sql); //converts the java query to a sql query in order to filter results from the database
+			pstmt.setInt(1, filmId); // we've used a bind variable ('?'), so we must give ? a value. in this case, it's based on the user input
+			ResultSet filmResult = pstmt.executeQuery(); //this executes the query and returns results from the database
+			if (filmResult.next()) { //checks to see if there are results, if so, the rest of the code gets values from the database and sets it to field values in the film class, returning the fully fledged Film object
 				film = new Film();
 				film.setId(filmResult.getInt("id"));
 				film.setTitle(filmResult.getString("title"));
