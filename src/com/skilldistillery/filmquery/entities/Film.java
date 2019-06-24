@@ -223,15 +223,26 @@ public class Film {
 		return true;
 	}
 
+//	@Override
+//	public String toString() {
+//		StringBuilder builder = new StringBuilder();
+//		builder.append("Film [id=").append(id).append(", title=").append(title).append(", description=")
+//		.append(description).append(", releaseYear=").append(releaseYear).append(", language=")
+//		.append(language.getName()).append(", rentalDuration=").append(rentalDuration).append(", rentalRate=")
+//		.append(rentalRate).append(", length=").append(length).append(", replacementCost=")
+//		.append(replacementCost).append(", rating=").append(rating).append(", specialFeatures=")
+//		.append(specialFeatures).append(", cast=").append(cast).append("]");
+//		return builder.toString();
+//	}
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Film [id=").append(id).append(", title=").append(title).append(", description=")
-				.append(description).append(", releaseYear=").append(releaseYear).append(", language=")
-				.append(language.getName()).append(", rentalDuration=").append(rentalDuration).append(", rentalRate=")
-				.append(rentalRate).append(", length=").append(length).append(", replacementCost=")
-				.append(replacementCost).append(", rating=").append(rating).append(", specialFeatures=")
-				.append(specialFeatures).append(", cast=").append(cast).append("]");
+		builder.append("[Title: ").append(title) //
+				.append("; Description: ").append(description) //
+				.append("; Release Year: ").append(releaseYear) //
+				.append("; Language: ").append(language.getName()) //
+				.append("; Rating: ").append(rating) //
+				.append("; Cast: ").append(cast).append("]"); //
 		return builder.toString();
 	}
  
