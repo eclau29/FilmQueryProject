@@ -15,7 +15,7 @@ public class FilmQueryApp {
 
 	public static void main(String[] args) throws SQLException {
 		FilmQueryApp app = new FilmQueryApp();
-		System.out.println("Welcome to FilmQuery(TM)!");
+		System.out.println("***************** Welcome to FilmQuery *****************\n");
 //    try {
 //		app.test();
 //	} catch (SQLException e) {
@@ -49,9 +49,9 @@ public class FilmQueryApp {
 	}
 
 	private void startUserInterface(Scanner input) throws SQLException {
-		System.out.println("Would you like to:");
+		System.out.println("What would you like to do? (Please choose 1, 2, 3, or 4) ");
 		System.out.println(
-				"1. Look up a film using a Film ID\n2. Look up a film using a keyword\n3. Exit\n(Please choose 1, 2, or 3)");
+				"1. Look up a film using a film ID\n2. Look up films using a keyword\n3. Look up films by actor ID\n4. Exit");
 		int resp = input.nextInt();
 		String contResp;
 		boolean contLoop = true;
@@ -65,7 +65,9 @@ public class FilmQueryApp {
 				film = db.findFilmById(filmIdInput);
 				if (film != null) {
 					System.out.println(film + "\n");
-				} 
+				} else {
+					System.out.println("ID of 0 does not exist. Please try again.\n");
+				}
 			} catch (Exception e) {
 //				e.printStackTrace();
 				input.nextLine();
@@ -78,19 +80,38 @@ public class FilmQueryApp {
 		case 2:
 			System.out.print("Please enter a KEYWORD: ");
 			String keywordInput = input.next();
-			List<Film> filmList = db.findFilmByKeyword(keywordInput);
+			List<Film> filmListFromKeyword = db.findFilmByKeyword(keywordInput);
 
-			if (filmList.size() > 0) {
-				for (Film film2 : filmList) {
+			if (filmListFromKeyword.size() > 0) {
+				System.out.println("\nHere is a list of " + filmListFromKeyword.size() + " film(s) with the keyword \"" + keywordInput + "\":\n");
+				for (Film film2 : filmListFromKeyword) {
 					System.out.println(film2);
 				}
 			} else {
-				System.out.println("I'm sorry, there are no results.\n");
+				System.out.println("I'm sorry, there are no results with that keyword.\n");
 
 			}
+			System.out.println();
 			startUserInterface(input);
 			break;
 		case 3:
+			System.out.println("Please enter an actor ID: ");
+			int actorID = input.nextInt();
+			Actor actor = new Actor();
+			List<Film> filmListFromActorID = db.findFilmsByActorId(actorID);
+			Actor actorFromActorID = db.findActorById(actorID);
+			if (filmListFromActorID.size() > 0 ) {
+				System.out.println("Here is a list of all of " + actorFromActorID.getFirstName() + " " + actorFromActorID.getLastName() + "'s films on file (" + filmListFromActorID.size() + " results): \n"); 
+				for (Film film3 : filmListFromActorID) {
+					System.out.println(film3);
+				}
+			} else {
+				System.out.println("I'm sorry, there are no results with that Actor ID.");
+			}
+			System.out.println();
+			startUserInterface(input);
+			break;
+		case 4:
 			System.out.println("Exiting...\nThank you for using FilmQuery(TM)");
 			contLoop = false;
 			break;

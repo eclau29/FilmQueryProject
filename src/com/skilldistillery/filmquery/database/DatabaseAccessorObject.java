@@ -190,11 +190,12 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		Language lang = null;
 		String sql = "SELECT language.id, language.name FROM film JOIN language on film.language_id = language.id WHERE film.id = ?";
 		PreparedStatement pstmt = null;
+		ResultSet langResult = null;
 		try {
 			conn = DriverManager.getConnection(URL, user, pwd);
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, filmId);
-			ResultSet langResult = pstmt.executeQuery();
+			langResult = pstmt.executeQuery();
 			if (langResult.next()) {
 				lang = new Language();
 				lang.setId(langResult.getInt("language.id"));
@@ -202,8 +203,67 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 			}
 		} catch (SQLException e1) {
 			e1.printStackTrace();
+		} finally {
+			if (conn != null) {
+				conn.close();
+			} if (pstmt != null) {
+				pstmt.close();
+			} if (langResult !=null) {
+				langResult.close();
+			}
 		}
 		return lang;
 	}
+	
+	@Override
+	public List<Film> findFilmsByActorId(int actorId) throws SQLException{
+		  List<Film> films = new ArrayList<>();
+		  PreparedStatement pstmt = null;
+		  ResultSet filmsByActorResult = null;
+		  try {
+		    Connection conn = DriverManager.getConnection(URL, user, pwd);
+		    String sql = "SELECT id, title, description, release_year, language_id, rental_duration, ";
+		                sql += " rental_rate, length, replacement_cost, rating, special_features "
+		               +  " FROM film JOIN film_actor ON film.id = film_actor.film_id "
+		               + " WHERE actor_id = ?";
+		    pstmt = conn.prepareStatement(sql);
+		    pstmt.setInt(1, actorId);
+		    filmsByActorResult = pstmt.executeQuery();
+		    while (filmsByActorResult.next()) {
+		      Film film = new Film();
+		      film.setId(filmsByActorResult.getInt("id"));
+				film.setTitle(filmsByActorResult.getString("title"));
+				film.setDescription(filmsByActorResult.getString("description"));
+				film.setReleaseYear(filmsByActorResult.getInt("release_year"));
+				film.setLanguageId(filmsByActorResult.getInt("language_id"));
+				film.setRentalDuration(filmsByActorResult.getInt("rental_duration"));
+				film.setRentalRate(filmsByActorResult.getInt("rental_rate"));
+				film.setLength(filmsByActorResult.getInt("length"));
+				film.setReplacementCost(filmsByActorResult.getDouble("replacement_cost"));
+				film.setRating(filmsByActorResult.getString("rating"));
+				film.setSpecialFeatures(filmsByActorResult.getString("special_features"));
+				film.setCast(findActorsByFilmId(film.getId()));
+				film.setLanguage(getLanguageByFilmID(film.getId()));
+				
+		      films.add(film);
+		    }
+		    filmsByActorResult.close();
+		    pstmt.close();
+		    conn.close();
+		  } catch (SQLException e) {
+		    e.printStackTrace();
+		  } finally {
+				if (conn != null) {
+					conn.close();
+				} if (pstmt != null) {
+					pstmt.close();
+				} if (filmsByActorResult !=null) {
+					filmsByActorResult.close();
+				}
+			}
+		  return films;
+		}
+	
+	
 
 }
