@@ -19,4 +19,4 @@ How to:
 * Use SQL-based queries in Java to retrieve search results and display them using Java
 * Create Java classes by mapping database tables (Object Relational Mapping)
 * Create a Database Accessor interface and Database Accessor Object (DAO) class, and use them together to connect to and take information from a database
-* Convert a Java Project into a Maven Project in order to create a pom.xml file, and subsequently, how to add `<discrepencies>` and its child `<discrepency>` tags to the pom.xml file
+* Convert a Java Project into a Maven Project in order to create a pom.xml file, and subsequently, how to add `<dependencies>` and its child `<dependency>` tags to the pom.xml file
